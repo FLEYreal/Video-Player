@@ -1,13 +1,21 @@
-import VideoPlayer from "./components/video-player/ui/video-player";
+// Basics
+import React from 'react';
 
-import video from './assets/video-example.mp4'
+// Video-Player
+import { VideoPlayer } from './components/video-player'
 
-function App() {
+// Assets
+import video from '../public/video-example.mp4';
+
+export default function App() {
+
     return (
-        <>
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%'
+        }}>
             <VideoPlayer src={video} />
-        </>
-    );
+        </div>
+    )
 }
-
-export default App;
