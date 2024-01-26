@@ -1,10 +1,11 @@
 // Basics
-import { createElement as e } from "react";
+import { createElement as e, useState, useEffect } from "react";
 import { isFirefox } from "react-device-detect";
 
 // UI-libs
-import { Box, IconButton, BoxProps, css, SxProps } from "@mui/material";
+import { Box, IconButton, BoxProps, SxProps } from "@mui/material";
 import styled from '@emotion/styled';
+import { css, keyframes } from '@emotion/react'
 
 // Hooks
 import { useVideo } from ".";
@@ -17,6 +18,9 @@ import FullscreenRoundedIcon from '@mui/icons-material/CropFreeRounded';
 import FullscreenExitRoundedIcon from '@mui/icons-material/FullscreenExitRounded';
 import PictureInPictureAltRoundedIcon from '@mui/icons-material/PictureInPictureAltRounded';
 
+// Variables
+export const controlsFadeTime = 0.35;
+
 // Interfaces
 export interface WrapperProps extends BoxProps {
     playing: boolean;
@@ -24,18 +28,47 @@ export interface WrapperProps extends BoxProps {
 
 export interface ControlsProps extends BoxProps {
     hidden: boolean;
+    controlsDisplay: boolean;
 }
 
 // Styles
+export const controlsFadeIn = keyframes`
+
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+`
+
+export const controlsFadeOut = keyframes`
+
+    0% {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+`
+
 export const Wrapper = styled(({ playing, ...props }: WrapperProps) => e(Box, props)) <WrapperProps>`
     position: absolute;
     bottom: 0;
     left: 0;
     transition: all .125s ease-in-out;
     font-size: 1.2rem;
-    background: linear-gradient(0deg, rgba(0, 0, 0, .55) 0%, rgba(0,0,0,0) 100%);
+    background: linear-gradient(0deg, rgba(0, 0, 0, .6) 0%, rgba(0,0,0,0) 100%);
     width: 100%;
-    height: 120px;
+    height: 140px;
     z-index: 1;
     pointer-events: none;
     box-sizing: border-box;
@@ -43,28 +76,30 @@ export const Wrapper = styled(({ playing, ...props }: WrapperProps) => e(Box, pr
     opacity: ${(props) => props.playing ? 0 : 1};
 `
 
-export const Controls = styled(({ hidden, ...props }: ControlsProps) => e(Box, props)) <ControlsProps>`
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 65px;
-    margin: auto 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    pointer-events: fill;
-    padding-left: 4px;
-    padding-right: 16px;
-    box-sizing: border-box;
-    transition: all 0.2s ease-in-out;
+export const Controls = styled(({ hidden, controlsDisplay, ...props }: ControlsProps) => <Box {...props} />)<ControlsProps>(
+    ({ hidden, controlsDisplay }) => css`
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 65px;
+        margin: auto 0;
+        align-items: center;
+        justify-content: space-between;
+        pointer-events: fill;
+        padding-left: 4px;
+        padding-right: 16px;
+        box-sizing: border-box;
+        transition: all 0.2s ease-in-out;
 
-    opacity: ${(props) => props.hidden ? 0 : 1};
+        display: ${controlsDisplay ? 'flex' : 'none'};
+        animation: ${hidden ? css`${controlsFadeIn} ${controlsFadeTime}s forwards` : css`${controlsFadeOut} ${controlsFadeTime}s forwards`};
 `
+);
 
 export const Timeline = styled(Box)`
 
-`
+    `
 
 export const ArrowButton = styled(Box)`
     position: absolute;
@@ -102,6 +137,9 @@ export const miniButtonStyles = css`
 
 // Component(s)
 export default function ControlsContainer() {
+
+    // States
+    const [controlsDisplay, setControlsDisplay] = useState(false);
 
     // Context Values
     const {
@@ -145,6 +183,19 @@ export default function ControlsContainer() {
         }
     }
 
+    // Effects
+    useEffect(() => {
+
+        if (hidden) {
+            setTimeout(() => {
+                setControlsDisplay(false);
+            }, controlsFadeTime * 1000)
+        }
+        else setControlsDisplay(true);
+
+
+    }, [hidden])
+
     return (
         <Wrapper playing={playing}>
 
@@ -154,7 +205,7 @@ export default function ControlsContainer() {
 
             <Timeline></Timeline>
 
-            <Controls hidden={hidden}>
+            <Controls hidden={hidden} controlsDisplay={controlsDisplay}>
 
                 <Box>
                     <IconButton onClick={() => setPlaying(prev => !prev)}>

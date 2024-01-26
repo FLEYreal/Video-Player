@@ -16,12 +16,13 @@ export interface WrapperProps extends BoxProps {
 
 // Styled
 export const Wrapper = styled(({ fullscreen, ...props }: WrapperProps) => e(Box, props)) <WrapperProps>`
-    position: relative;
     overflow: hidden;
     box-sizing: border-box;
     display: flex;
     align-items: center;
 
+    position: ${props => props.fullscreen ? 'absolute' : 'relative'};
+    z-index: ${props => props.fullscreen ? '1000' : '0'};
     border-radius: ${props => props.fullscreen ? '0px' : '6px'};;
     width: ${props => props.fullscreen ? '100%' : '90%'};
     max-width: ${props => props.fullscreen ? '100%' : '1200px'};;
