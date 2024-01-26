@@ -31,6 +31,10 @@ export interface ControlsProps extends BoxProps {
     controlsDisplay: boolean;
 }
 
+export interface ArrowProps extends BoxProps {
+    hidden: boolean;
+}
+
 // Styles
 export const controlsFadeIn = keyframes`
 
@@ -101,15 +105,21 @@ export const Timeline = styled(Box)`
 
     `
 
-export const ArrowButton = styled(Box)`
+export const ArrowButton = styled(({ hidden, ...props }: ArrowProps) => e(Box, props)) <ArrowProps>`
     position: absolute;
     bottom: 1.6rem;
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 28.8px;
+    height: 28.8px;
     left: calc(50% - 0.6rem);
     z-index: 2;
     pointer-events: fill;
     cursor: pointer;
+    transition: all .125s ease-in-out;
+    transform: ${({ hidden }) => hidden ? 'translateY(0px) rotate(180deg)' : 'translateY(0px) rotate(0deg)'};
+
+    &:hover {
+        transform: ${({ hidden }) => hidden ? 'translateY(3px) rotate(180deg)' : 'translateY(3px) rotate(0deg)'};
+    }
 `
 
 export const iconButtonStyle = css`
@@ -199,7 +209,7 @@ export default function ControlsContainer() {
     return (
         <Wrapper playing={playing}>
 
-            <ArrowButton onClick={() => setHidden(prev => !prev)}>
+            <ArrowButton hidden={hidden} onClick={() => setHidden(prev => !prev)}>
                 <KeyboardArrowDownRoundedIcon sx={miniButtonStyles} />
             </ArrowButton>
 

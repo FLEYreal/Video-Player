@@ -1,6 +1,6 @@
 // Imports
 import { useState, useContext, createContext, Dispatch, SetStateAction, useEffect } from 'react';
-import VideoPlayerContainer from './video-player';
+import VideoPlayerContainer from './player';
 
 // Interfaces
 export interface VideoPlayerContainerProps {
