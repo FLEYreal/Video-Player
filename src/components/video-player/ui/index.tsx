@@ -20,6 +20,9 @@ export interface VideoPlayerContextProps {
     hidden: boolean;
     setHidden: Dispatch<SetStateAction<boolean>>;
 
+    volume: number;
+    setVolume: Dispatch<SetStateAction<number>>;
+
     video: HTMLVideoElement;
     setVideo: Dispatch<SetStateAction<HTMLVideoElement>>;
 }
@@ -38,6 +41,9 @@ export const VideoPlayerContext = createContext<VideoPlayerContextProps>({
     hidden: false,
     setHidden: () => { },
 
+    volume: 30,
+    setVolume: () => { },
+
     video: document.createElement('video'),
     setVideo: () => { }
 });
@@ -53,16 +59,17 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
     const [fullScreen, setFullScreen] = useState(false);
     const [miniMode, setMiniMode] = useState(false);
     const [hidden, setHidden] = useState(false);
+    const [volume, setVolume] = useState(30)
     const [video, setVideo] = useState(document.createElement('video'));
 
     // Effects
     useEffect(() => {
         if (video) {
 
-            video.paused ? 
+            video.paused ?
                 video.play().catch(e => console.log(e)) : // Play if paused + Catch an error if there is
                 video.pause(); // Pause if playing
-    
+
         }
     }, [playing]);
 
@@ -75,6 +82,7 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
                 fullScreen, setFullScreen,
                 miniMode, setMiniMode,
                 hidden, setHidden,
+                volume, setVolume,
                 video, setVideo
             }}
         >

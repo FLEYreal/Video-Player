@@ -1,13 +1,12 @@
 // Bascis
-import { createElement as e, useEffect, useRef } from "react";
+import { createElement as e } from "react";
 
 // UI-Libs
 import { Box, BoxProps } from "@mui/material";
 import styled from '@emotion/styled';
 
 // Components & Hooks
-import ControlsContainer, { Wrapper as ControlsWrapper } from "./controls";
-import { useVideo, VideoPlayerContainerProps } from ".";
+import { Wrapper as ControlsWrapper } from '../controls-container/wrapper';
 
 // Interfaces
 export interface WrapperProps extends BoxProps {
@@ -31,25 +30,3 @@ export const Wrapper = styled(({ fullscreen, ...props }: WrapperProps) => e(Box,
         opacity: 1;
     }
 `
-
-export const Video = styled.video`
-    width: 100%;
-`
-
-// Video Player
-export default function VideoPlayerContainer({ src }: VideoPlayerContainerProps) {
-
-    const videoEl = useRef<HTMLVideoElement>(null);
-    const { setPlaying, setVideo, fullScreen } = useVideo();
-
-    useEffect(() => setVideo(videoEl.current as HTMLVideoElement), []);
-
-    return (
-        <Wrapper fullscreen={fullScreen}>
-
-            <ControlsContainer />
-            <Video onClick={() => setPlaying(prev => !prev)} ref={videoEl} src={src} style={{ zIndex: 0 }} />
-
-        </Wrapper>
-    )
-}
