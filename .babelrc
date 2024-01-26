@@ -1,9 +1,10 @@
 {
     "presets": [
+        "@emotion/babel-preset-css-prop",
         "@babel/preset-react",
         "@babel/preset-typescript"
     ],
     "plugins": [
-        "@emotion"
+        "@emotion/babel-plugin"
     ]
 }

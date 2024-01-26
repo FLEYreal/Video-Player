@@ -1,6 +1,3 @@
-// Basics
-import React from 'react';
-
 // Video-Player
 import { VideoPlayer } from './components/video-player'
 

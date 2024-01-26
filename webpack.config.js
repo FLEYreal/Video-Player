@@ -1,5 +1,5 @@
-// NodeJS Modules
 const path = require('path');
+const webpack = require('webpack');
 
 // Libs
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -43,6 +43,11 @@ module.exports = {
         // Setup html-webpack-plugin to generate index.html
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'index.html')
+        }),
+
+        // Provide React package to every file
+        new webpack.ProvidePlugin({
+            React: 'react'
         })
 
     ]

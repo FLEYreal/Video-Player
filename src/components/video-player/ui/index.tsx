@@ -1,48 +1,85 @@
-// Basics
-import React from "react";
+// Imports
+import { useState, useContext, createContext, Dispatch, SetStateAction, useEffect } from 'react';
+import VideoPlayerContainer from './video-player';
 
-// UI-Libs
-import { Box } from "@mui/material";
-import styled from '@emotion/styled';
-
-// Components
-import ControlsContainer, { Wrapper as ControlsWrapper } from "./controls";
-
-// Interface for Video Player's props
-export interface VideoPlayerProps {
+// Interfaces
+export interface VideoPlayerContainerProps {
     src: string;
 };
 
-// Styled
-export const Wrapper = styled(Box)`
-    position: relative;
-    overflow: hidden;
-    border-radius: 6px;
-    box-sizing: border-box;
-    width: 90%;
-    max-width: 1200px;
-    display: flex;
-    align-items: center;
+export interface VideoPlayerContextProps {
+    playing: boolean;
+    setPlaying: Dispatch<SetStateAction<boolean>>;
 
-    &:hover > ${ControlsWrapper} {
-        opacity: 1;
-    }
-`
+    fullScreen: boolean;
+    setFullScreen: Dispatch<SetStateAction<boolean>>;
 
-export const Video = styled.video`
-    width: 100%;
-`
+    miniMode: boolean;
+    setMiniMode: Dispatch<SetStateAction<boolean>>;
 
+    hidden: boolean;
+    setHidden: Dispatch<SetStateAction<boolean>>;
 
-// Video Player
-export default function VideoPlayer({ src }: VideoPlayerProps) {
+    video: HTMLVideoElement;
+    setVideo: Dispatch<SetStateAction<HTMLVideoElement>>;
+}
+
+// Context
+export const VideoPlayerContext = createContext<VideoPlayerContextProps>({
+    playing: false,
+    setPlaying: () => { },
+
+    fullScreen: false,
+    setFullScreen: () => { },
+
+    miniMode: false,
+    setMiniMode: () => { },
+
+    hidden: false,
+    setHidden: () => { },
+
+    video: document.createElement('video'),
+    setVideo: () => { }
+});
+
+// Hook
+export const useVideo = () => useContext(VideoPlayerContext);
+
+// Provider
+export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
+
+    // States
+    const [playing, setPlaying] = useState(false);
+    const [fullScreen, setFullScreen] = useState(false);
+    const [miniMode, setMiniMode] = useState(false);
+    const [hidden, setHidden] = useState(false);
+    const [video, setVideo] = useState(document.createElement('video'));
+
+    // Effects
+    useEffect(() => {
+        if (video) {
+
+            video.paused ? 
+                video.play().catch(e => console.log(e)) : // Play if paused + Catch an error if there is
+                video.pause(); // Pause if playing
+    
+        }
+    }, [playing]);
 
     return (
-        <Wrapper>
+        <VideoPlayerContext.Provider
 
-            <ControlsContainer/>
-            <Video src={src} />
+            // Provide All Context values
+            value={{
+                playing, setPlaying,
+                fullScreen, setFullScreen,
+                miniMode, setMiniMode,
+                hidden, setHidden,
+                video, setVideo
+            }}
+        >
+            <VideoPlayerContainer src={src} />
+        </VideoPlayerContext.Provider>
+    );
 
-        </Wrapper>
-    )
 }
