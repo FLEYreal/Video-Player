@@ -1,9 +1,7 @@
-// UI-libs
-import { IconButton } from '@mui/material';
-
 // Insides
 import { iconButtonStyle } from './styles';
 import { useVideo } from '..';
+import VideoButton from '../video-button'
 
 // Assets
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
@@ -16,7 +14,7 @@ export default function Play() {
     const { playing, setPlaying } = useVideo();
 
     return (
-        <IconButton onClick={() => setPlaying(prev => !prev)} sx={{ pr: '4px' }}>
+        <VideoButton title={playing ? 'Pause (Space)' : 'Play (Space)'} onClick={() => setPlaying(prev => !prev)} sx={{ pr: '4px' }}>
 
             {
                 playing ?
@@ -29,6 +27,6 @@ export default function Play() {
                     />
             }
 
-        </IconButton>
+        </VideoButton>
     )
-}
+} null

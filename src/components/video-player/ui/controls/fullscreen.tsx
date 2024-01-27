@@ -4,6 +4,7 @@ import { IconButton } from '@mui/material';
 // Insides
 import { miniButtonStyles } from './styles';
 import { useVideo } from '..';
+import VideoButton from '../video-button';
 
 // Assets
 import FullscreenRoundedIcon from '@mui/icons-material/CropFreeRounded';
@@ -28,13 +29,13 @@ export default function FullScreen() {
     }
 
     return (
-        <IconButton onClick={toggleFullScreen}>
+        <VideoButton title={fullScreen ? "Exit full screen (ESC)" : "Enter full screen (F)"} onClick={toggleFullScreen}>
             {
                 fullScreen ?
                     <FullscreenExitRoundedIcon sx={miniButtonStyles} />
                     :
                     <FullscreenRoundedIcon sx={miniButtonStyles} />
             }
-        </IconButton>
+        </VideoButton>
     )
 }

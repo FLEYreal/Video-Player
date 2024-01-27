@@ -1,13 +1,10 @@
 // Basics
-import { useState, useEffect } from 'react';
 import { isFirefox } from "react-device-detect";
-
-// UI-libs
-import { IconButton } from '@mui/material';
 
 // Insides
 import { miniButtonStyles } from './styles';
 import { useVideo } from '..'
+import VideoButton from '../video-button';
 
 // Assets
 import PictureInPictureAltRoundedIcon from '@mui/icons-material/PictureInPictureAltRounded';
@@ -42,8 +39,8 @@ export default function MiniMode() {
     }
 
     return (
-        <IconButton sx={{ display: isFirefox ? 'none' : 'flex' }} disabled={isFirefox} onClick={toggleMiniMode}>
+        <VideoButton title={miniMode ? "Exit Mini-Mode (I)" : "Enter Mini-Mode (I)"} sx={{ display: isFirefox ? 'none' : 'flex' }} disabled={isFirefox} onClick={toggleMiniMode}>
             <PictureInPictureAltRoundedIcon sx={miniButtonStyles} />
-        </IconButton>
+        </VideoButton>
     )
 }

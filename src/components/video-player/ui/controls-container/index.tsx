@@ -2,7 +2,7 @@
 import { createElement as e } from "react";
 
 // UI-libs
-import { Box, BoxProps } from "@mui/material";
+import { Box } from "@mui/material";
 import styled from '@emotion/styled';
 
 // Insides
@@ -11,16 +11,17 @@ import { miniButtonStyles } from '../controls/styles'
 import { Wrapper } from "./wrapper";
 import Controls from "../controls";
 import Timeline from "../timeline";
+import VideoButton, { VideoButtonProps } from "../video-button";
 
 // Assets
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 
 // Interfaces
-export interface ArrowProps extends BoxProps {
+export interface ArrowProps extends VideoButtonProps {
     hidden: boolean;
 }
 
-export const ArrowButton = styled(({ hidden, ...props }: ArrowProps) => e(Box, props)) <ArrowProps>`
+export const ArrowButton = styled(({ hidden, ...props }: ArrowProps) => e(VideoButton, props)) <ArrowProps>`
     position: absolute;
     bottom: 1rem;
     width: 28.8px;
@@ -33,7 +34,7 @@ export const ArrowButton = styled(({ hidden, ...props }: ArrowProps) => e(Box, p
     transform: ${({ hidden }) => hidden ? 'translateY(0px) rotate(180deg)' : 'translateY(0px) rotate(0deg)'};
 
     &:hover {
-        transform: ${({ hidden }) => hidden ? 'translateY(3px) rotate(180deg)' : 'translateY(3px) rotate(0deg)'};
+        transform: ${({ hidden }) => hidden ? 'translateY(5px) rotate(180deg)' : 'translateY(5px) rotate(0deg)'};
     }
 `
 
@@ -45,7 +46,7 @@ export default function ControlsContainer() {
     return (
         <Wrapper playing={playing}>
 
-            <ArrowButton hidden={hidden} onClick={() => setHidden(prev => !prev)}>
+            <ArrowButton title={hidden ? 'Show Menu (W)' : 'Hide Menu (S)'} hidden={hidden} onClick={() => setHidden(prev => !prev)}>
                 <KeyboardArrowDownRoundedIcon sx={miniButtonStyles} />
             </ArrowButton>
 

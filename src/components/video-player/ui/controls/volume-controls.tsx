@@ -1,11 +1,12 @@
 // UI-libs
-import { Box, IconButton, Slider } from '@mui/material';
+import { Box, Slider } from '@mui/material';
 import styled from '@emotion/styled';
 
 // Insides
 import { miniButtonStyles } from './styles';
 import { buttonColor } from '../../config';
 import { useVideo } from '..';
+import VideoButton from '../video-button';
 
 // Assets
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
@@ -64,7 +65,7 @@ export default function VolumeControls() {
 
     return (
         <Wrapper>
-            <IconButton onClick={toggleVolume} sx={{ pr: '16px' }}>
+            <VideoButton title="Volume Controls (↑, ↓)" onClick={toggleVolume} sx={{ pr: '16px' }}>
                 {
                     volume === 0 ?
                         <VolumeOffRoundedIcon
@@ -83,7 +84,7 @@ export default function VolumeControls() {
                                     sx={miniButtonStyles}
                                 />
                 }
-            </IconButton>
+            </VideoButton>
 
             <VolumeSliderContainer>
                 <VolumeSlider size="medium" value={volume} onChange={handleVolumeChange} />
