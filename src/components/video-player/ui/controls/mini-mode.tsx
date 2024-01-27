@@ -1,5 +1,6 @@
 // Basics
 import { isFirefox } from "react-device-detect";
+import { useCallback } from "react";
 
 // Insides
 import { miniButtonStyles } from './styles';
@@ -18,7 +19,7 @@ export default function MiniMode() {
         video
     } = useVideo();
 
-    const toggleMiniMode = () => {
+    const toggleMiniMode = useCallback(() => {
 
         try {
             setMiniMode(prev => !prev);
@@ -36,10 +37,15 @@ export default function MiniMode() {
         } catch (e) {
             console.log('Your Browser Probably Doesn\'t Support Mini Mode!', e)
         }
-    }
+    }, [miniMode, fullScreen, setFullScreen, setMiniMode, video]);
 
     return (
-        <VideoButton title={miniMode ? "Exit Mini-Mode (I)" : "Enter Mini-Mode (I)"} sx={{ display: isFirefox ? 'none' : 'flex' }} disabled={isFirefox} onClick={toggleMiniMode}>
+        <VideoButton 
+            title={miniMode ? "Exit Mini-Mode (I)" : "Enter Mini-Mode (I)"} 
+            sx={{ display: isFirefox ? 'none' : 'flex' }}
+            disabled={isFirefox}
+            onClick={toggleMiniMode}
+        >
             <PictureInPictureAltRoundedIcon sx={miniButtonStyles} />
         </VideoButton>
     )

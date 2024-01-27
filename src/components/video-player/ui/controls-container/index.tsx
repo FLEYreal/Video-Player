@@ -1,8 +1,7 @@
 // Basics
-import { createElement as e } from "react";
+import { createElement as e, useCallback } from "react";
 
 // UI-libs
-import { Box } from "@mui/material";
 import styled from '@emotion/styled';
 
 // Insides
@@ -41,12 +40,18 @@ export const ArrowButton = styled(({ hidden, ...props }: ArrowProps) => e(VideoB
 // Component(s)
 export default function ControlsContainer() {
 
+    // Context Values
     const { playing, hidden, setHidden } = useVideo()
+
+    // Handlers
+    const handleClick = useCallback(() => {
+        setHidden(!hidden)
+    }, [setHidden, hidden])
 
     return (
         <Wrapper playing={playing}>
 
-            <ArrowButton title={hidden ? 'Show Menu (W)' : 'Hide Menu (S)'} hidden={hidden} onClick={() => setHidden(prev => !prev)}>
+            <ArrowButton title={hidden ? 'Show Menu (W)' : 'Hide Menu (S)'} hidden={hidden} onClick={handleClick}>
                 <KeyboardArrowDownRoundedIcon sx={miniButtonStyles} />
             </ArrowButton>
 

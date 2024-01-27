@@ -1,5 +1,5 @@
-// UI-libs
-import { IconButton } from '@mui/material';
+// Basics
+import { useCallback } from 'react';
 
 // Insides
 import { miniButtonStyles } from './styles';
@@ -16,17 +16,12 @@ export default function FullScreen() {
     const { fullScreen, setFullScreen, setMiniMode } = useVideo();
 
     // Handlers
-    const toggleFullScreen = () => {
-
-        // Delay before toggling due to built-in fade animation
-        setTimeout(() => {
-            setFullScreen(prev => !prev);
-            setMiniMode(false); // It can't be mini mode in full screen
-        }, 150)
+    const toggleFullScreen = useCallback(() => {
 
         if (fullScreen) document.exitFullscreen(); // Exit if it's full screen
         else document.documentElement.requestFullscreen(); // Enter if it's not full screen
-    }
+
+    }, [fullScreen, setFullScreen, setMiniMode]);
 
     return (
         <VideoButton title={fullScreen ? "Exit full screen (ESC)" : "Enter full screen (F)"} onClick={toggleFullScreen}>

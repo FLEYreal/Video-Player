@@ -1,3 +1,6 @@
+// Basics
+import { useCallback } from 'react';
+
 // UI-libs
 import { Box, Slider } from '@mui/material';
 import styled from '@emotion/styled';
@@ -58,14 +61,18 @@ export default function VolumeControls() {
         setVolume(newValue as number);
     }
 
-    const toggleVolume = () => {
+    const toggleVolume = useCallback(() => {
         if (volume === 0) setVolume(30)
         else setVolume(0)
-    }
+    }, [setVolume, volume])
 
     return (
         <Wrapper>
-            <VideoButton title="Volume Controls (↑, ↓)" onClick={toggleVolume} sx={{ pr: '16px' }}>
+            <VideoButton 
+            title="Volume Controls (↑, ↓)" 
+            onClick={toggleVolume} 
+            sx={{ pr: '16px' }}
+        >
                 {
                     volume === 0 ?
                         <VolumeOffRoundedIcon

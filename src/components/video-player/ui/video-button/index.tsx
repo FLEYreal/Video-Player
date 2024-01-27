@@ -1,5 +1,5 @@
 // Basics
-import { useState } from 'react';
+import { useState, memo } from 'react';
 
 // UI-libs
 import { IconButton, IconButtonProps, Popover, Typography } from '@mui/material'
@@ -13,7 +13,7 @@ export interface VideoButtonProps extends IconButtonProps {
 }
 
 
-export default function VideoButton({ title, children, onClick, ...props }: VideoButtonProps) {
+function VideoButton({ title, children, onClick, ...props }: VideoButtonProps) {
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -81,3 +81,5 @@ export default function VideoButton({ title, children, onClick, ...props }: Vide
         </>
     )
 }
+
+export default memo(VideoButton);

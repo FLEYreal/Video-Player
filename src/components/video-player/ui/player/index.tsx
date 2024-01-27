@@ -1,5 +1,5 @@
 // Bascis
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 
 // UI-Libs
 import styled from '@emotion/styled';
@@ -14,7 +14,7 @@ export const Video = styled.video`
 `
 
 // Video Player
-export default function VideoPlayerContainer({ src }: VideoPlayerContainerProps) {
+function VideoPlayerContainer({ src }: VideoPlayerContainerProps) {
 
     // Hooks
     const videoEl = useRef<HTMLVideoElement>(null);
@@ -36,3 +36,5 @@ export default function VideoPlayerContainer({ src }: VideoPlayerContainerProps)
         </Wrapper>
     )
 }
+
+export default VideoPlayerContainer;

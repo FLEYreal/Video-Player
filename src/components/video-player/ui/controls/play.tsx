@@ -1,3 +1,6 @@
+// Basics
+import { useCallback } from 'react';
+
 // Insides
 import { iconButtonStyle } from './styles';
 import { useVideo } from '..';
@@ -13,8 +16,13 @@ export default function Play() {
     // Context Values
     const { playing, setPlaying } = useVideo();
 
+    // Handlers
+    const togglePlaying = useCallback(() => {
+        setPlaying(prev =>!prev);
+    }, [setPlaying]);
+
     return (
-        <VideoButton title={playing ? 'Pause (Space)' : 'Play (Space)'} onClick={() => setPlaying(prev => !prev)} sx={{ pr: '4px' }}>
+        <VideoButton title={playing ? 'Pause (Space)' : 'Play (Space)'} onClick={togglePlaying} sx={{ pr: '4px' }}>
 
             {
                 playing ?
