@@ -2,12 +2,20 @@
 import { useState, useContext, createContext, Dispatch, SetStateAction, useEffect } from 'react';
 import VideoPlayerContainer from './player';
 
-// Interfaces
+// Interfaces & Types
+export type videoLength = {
+    now: string,
+    total: string
+}
+
 export interface VideoPlayerContainerProps {
     src: string;
 };
 
 export interface VideoPlayerContextProps {
+    video: HTMLVideoElement;
+    setVideo: Dispatch<SetStateAction<HTMLVideoElement>>;
+
     playing: boolean;
     setPlaying: Dispatch<SetStateAction<boolean>>;
 
@@ -23,12 +31,15 @@ export interface VideoPlayerContextProps {
     volume: number;
     setVolume: Dispatch<SetStateAction<number>>;
 
-    video: HTMLVideoElement;
-    setVideo: Dispatch<SetStateAction<HTMLVideoElement>>;
+    videoLength: videoLength;
+    setVideoLength: Dispatch<SetStateAction<videoLength>>;
 }
 
 // Context
 export const VideoPlayerContext = createContext<VideoPlayerContextProps>({
+    video: document.createElement('video'),
+    setVideo: () => { },
+    
     playing: false,
     setPlaying: () => { },
 
@@ -44,8 +55,8 @@ export const VideoPlayerContext = createContext<VideoPlayerContextProps>({
     volume: 30,
     setVolume: () => { },
 
-    video: document.createElement('video'),
-    setVideo: () => { }
+    videoLength: { now: '0:00', total: '3:50' },
+    setVideoLength: () => { }
 });
 
 // Hook
@@ -55,12 +66,13 @@ export const useVideo = () => useContext(VideoPlayerContext);
 export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
 
     // States
+    const [video, setVideo] = useState(document.createElement('video'));
     const [playing, setPlaying] = useState(false);
     const [fullScreen, setFullScreen] = useState(false);
     const [miniMode, setMiniMode] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [volume, setVolume] = useState(30)
-    const [video, setVideo] = useState(document.createElement('video'));
+    const [videoLength, setVideoLength] = useState({ now: '0:00', total: '3:50' });
 
     // Effects
     useEffect(() => {
@@ -78,12 +90,13 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
 
             // Provide All Context values
             value={{
+                video, setVideo,
                 playing, setPlaying,
                 fullScreen, setFullScreen,
                 miniMode, setMiniMode,
                 hidden, setHidden,
                 volume, setVolume,
-                video, setVideo
+                videoLength, setVideoLength
             }}
         >
             <VideoPlayerContainer src={src} />

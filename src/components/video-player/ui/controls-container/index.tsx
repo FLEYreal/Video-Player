@@ -22,7 +22,7 @@ export interface ArrowProps extends BoxProps {
 
 export const ArrowButton = styled(({ hidden, ...props }: ArrowProps) => e(Box, props)) <ArrowProps>`
     position: absolute;
-    bottom: 1.6rem;
+    bottom: 1rem;
     width: 28.8px;
     height: 28.8px;
     left: calc(50% - 0.6rem);
@@ -49,8 +49,8 @@ export default function ControlsContainer() {
                 <KeyboardArrowDownRoundedIcon sx={miniButtonStyles} />
             </ArrowButton>
 
-            <Timeline/>
-            <Controls/>
+            <Timeline />
+            <Controls />
 
         </Wrapper>
     )
