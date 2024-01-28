@@ -18,7 +18,7 @@ export default function Play() {
 
     // Handlers
     const togglePlaying = useCallback(() => {
-        setPlaying(prev =>!prev);
+        setPlaying(prev => !prev);
     }, [playing]);
 
     return (

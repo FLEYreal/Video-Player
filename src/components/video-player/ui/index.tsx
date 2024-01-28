@@ -19,6 +19,7 @@ export type videoLength = {
 
 export interface VideoPlayerContainerProps {
     src: string;
+    keyHandler?: (event: KeyboardEvent) => void
 };
 
 export interface VideoPlayerContextProps {
@@ -46,6 +47,9 @@ export interface VideoPlayerContextProps {
     videoLength: videoLength;
     setVideoLength: Dispatch<SetStateAction<videoLength>>;
 }
+
+// Functions
+const isVideoPlaying = (video: HTMLVideoElement) => !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2);
 
 // Context
 export const VideoPlayerContext = createContext<VideoPlayerContextProps>({
@@ -78,11 +82,11 @@ export const VideoPlayerContext = createContext<VideoPlayerContextProps>({
 export const useVideo = () => useContext(VideoPlayerContext);
 
 // Provider
-export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
+export default function VideoPlayer({ src, keyHandler: customKeyHandler }: VideoPlayerContainerProps) {
 
     // States
     const [video, setVideo] = useState(document.createElement('video'));
-    const [playing, setPlaying] = useState(false);
+    const [playing, setPlaying] = useState(isVideoPlaying(video));
     const [fullScreen, setFullScreen] = useState(false);
     const [miniMode, setMiniMode] = useState(false);
     const [hidden, setHidden] = useState(false);
@@ -94,6 +98,52 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
     const totalVideoLength = useMemo(() => video.duration, [video.duration]);
 
     // Handlers
+    const keyHandler = (event: KeyboardEvent) => {
+
+        if (customKeyHandler) customKeyHandler(event)
+
+        // Play & Pause video on Space
+        if (event.code === 'Space') {
+            setPlaying(prev => !prev);
+        }
+
+        // Increase Volume on Arrow Up
+        else if (event.code === 'ArrowUp') {
+            setVolume(prev => {
+                if (prev + 5 > 100) {
+                    return 100;
+                }
+                return prev + 5;
+            })
+        }
+
+        // Decrease Volume on Arrow Down
+        else if (event.code === 'ArrowDown') {
+            setVolume(prev => {
+                if (prev - 5 < 0) {
+                    return 0;
+                }
+                return prev - 5;
+            })
+        }
+
+        // Hide Menu
+        else if (event.code === 'KeyS') {
+            setHidden(true);
+        }
+
+        // Hide Menu
+        else if (event.code === 'KeyW') {
+            setHidden(false);
+        }
+
+        // Toggle Fullscreen
+        else if (event.code === 'KeyF') {
+            setFullScreen(prev =>!prev);
+        }
+
+    }
+
     const defineCurrentTime = () => {
 
         // Set time
@@ -126,7 +176,7 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
     useEffect(() => {
         if (video) {
 
-            video.paused ?
+            playing ?
                 video.play().catch(e => console.log(e)) : // Play if paused + Catch an error if there is
                 video.pause(); // Pause if playing
 
@@ -145,6 +195,7 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
             video.addEventListener('enterpictureinpicture', handleMiniModeEnter);
             video.addEventListener('leavepictureinpicture', handleMiniModeLeave);
             video.addEventListener('timeupdate', defineCurrentTime)
+            document.addEventListener('keyup', keyHandler)
             document.addEventListener("fullscreenchange", handleFullscreenChange);
 
             // Remove listeners on unmount
@@ -152,6 +203,7 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
                 video.removeEventListener('enterpictureinpicture', handleMiniModeEnter);
                 video.removeEventListener('leavepictureinpicture', handleMiniModeLeave);
                 video.removeEventListener('timeupdate', defineCurrentTime)
+                document.removeEventListener('keyup', keyHandler)
                 document.removeEventListener("fullscreenchange", handleFullscreenChange);
             }
 
