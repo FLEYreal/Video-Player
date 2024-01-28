@@ -161,8 +161,9 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
 
     useEffect(() => { // Save volume to be able to save it between reloads
 
-        if (volume && typeof volume === "number") {
+        if (!isNaN(volume)) {
             localStorage.setItem('volume', String(volume));
+            video.volume = volume / 100;
         }
 
     }, [volume])

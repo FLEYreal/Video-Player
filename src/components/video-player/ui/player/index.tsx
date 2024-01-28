@@ -1,5 +1,5 @@
 // Bascis
-import { useEffect, useRef, memo } from "react";
+import { useEffect, useRef } from "react";
 
 // UI-Libs
 import styled from '@emotion/styled';
@@ -18,20 +18,30 @@ function VideoPlayerContainer({ src }: VideoPlayerContainerProps) {
 
     // Hooks
     const videoEl = useRef<HTMLVideoElement>(null);
-    const { setPlaying, setVideo, fullScreen, volume } = useVideo();
+    const { setPlaying, setVideo, fullScreen, setVideoLength } = useVideo();
+
+    // Handlers
+    const handleLoadedMetadata = () => {
+        if (videoEl.current) {
+            setVideoLength(prev => ({ ...prev, total: videoEl.current!.duration }))
+            videoEl.current!.volume = Number(localStorage.getItem('volume') || '30') / 100;
+        }
+    }
 
     // Effects
     useEffect(() => setVideo(videoEl.current as HTMLVideoElement), []); // Set video component globally
-
-    useEffect(() => { // Change volume
-        if (videoEl.current) videoEl.current.volume = volume / 100
-    }, [videoEl.current, volume]);
 
     return (
         <Wrapper fullscreen={fullScreen}>
 
             <ControlsContainer />
-            <Video onClick={() => setPlaying(prev => !prev)} ref={videoEl} src={src} style={{ zIndex: 0 }} />
+            <Video
+                onLoadedMetadata={handleLoadedMetadata}
+                onClick={() => setPlaying(prev => !prev)}
+                ref={videoEl}
+                src={src}
+                style={{ zIndex: 0 }}
+            />
 
         </Wrapper>
     )
