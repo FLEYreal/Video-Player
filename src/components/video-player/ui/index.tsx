@@ -40,6 +40,9 @@ export interface VideoPlayerContextProps {
     volume: number;
     setVolume: Dispatch<SetStateAction<number>>;
 
+    speed: number;
+    setSpeed: Dispatch<SetStateAction<number>>;
+
     videoLength: videoLength;
     setVideoLength: Dispatch<SetStateAction<videoLength>>;
 }
@@ -82,6 +85,9 @@ export const VideoPlayerContext = createContext<VideoPlayerContextProps>({
     volume: 30,
     setVolume: () => { },
 
+    speed: 1,
+    setSpeed: () => { },
+
     videoLength: { now: '0:00', total: '3:50' },
     setVideoLength: () => { }
 });
@@ -98,7 +104,8 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
     const [fullScreen, setFullScreen] = useState(false);
     const [miniMode, setMiniMode] = useState(false);
     const [hidden, setHidden] = useState(false);
-    const [volume, setVolume] = useState(30)
+    const [speed, setSpeed] = useState(localStorage.getItem('speed') ? Number(localStorage.getItem('speed')) : video.playbackRate);
+    const [volume, setVolume] = useState(localStorage.getItem('volume') ? Number(localStorage.getItem('volume')) : 30);
     const [videoLength, setVideoLength] = useState({ now: '0:00', total: '3:50' });
 
     // Define video length
@@ -107,9 +114,13 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
     // Handlers
     const defineCurrentTime = () => {
 
+        // Define formatted time
+        const formatted = formatTime(video.currentTime)
+
+        // Set formatted time
         setVideoLength(prev => ({
             ...prev,
-            now: formatTime(video.currentTime)
+            now: formatted
         }));
 
     }
@@ -167,6 +178,19 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
 
     }, [video])
 
+    useEffect(() => {
+        if (volume && typeof volume === "number") {
+            localStorage.setItem('volume', String(volume));
+        }
+    }, [volume])
+
+    useEffect(() => {
+        if (speed && video) {
+            localStorage.setItem('speed', String(speed)); // Save value for playback speed
+            video.playbackRate = speed / 50; // Apply speed to video
+        }
+    }, [speed, video])
+
     return (
         <VideoPlayerContext.Provider
 
@@ -177,6 +201,7 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
                 fullScreen, setFullScreen,
                 miniMode, setMiniMode,
                 hidden, setHidden,
+                speed, setSpeed,
                 volume, setVolume,
                 videoLength, setVideoLength
             }}
