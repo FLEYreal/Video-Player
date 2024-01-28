@@ -6,13 +6,10 @@ import { Stack, Typography, Divider, Slider, IconButton, Button } from '@mui/mat
 
 // Insides
 import { useVideo } from '..';
+import { menuOptionsState } from '.';
 
 // Assets
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
-
-// Types
-export type menuOptionsState = 'SettingsItems' | 'PlaybackRateItems'
-
 
 export default function PlaybackRateItems({ setMenuOptions }: { setMenuOptions: Dispatch<SetStateAction<menuOptionsState>> }) {
 

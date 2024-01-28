@@ -19,7 +19,7 @@ export default function Play() {
     // Handlers
     const togglePlaying = useCallback(() => {
         setPlaying(prev =>!prev);
-    }, [setPlaying]);
+    }, [playing]);
 
     return (
         <VideoButton title={playing ? 'Pause (Space)' : 'Play (Space)'} onClick={togglePlaying} sx={{ pr: '4px' }}>

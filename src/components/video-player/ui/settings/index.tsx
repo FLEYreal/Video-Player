@@ -13,13 +13,7 @@ import PlaybackRateItems from './speed-items';
 // Assets
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 
-// Interfaces & Types
-export interface SettingsItemProps extends MenuItemProps {
-    icon: ReactNode;
-    label: string;
-    option: ReactNode;
-}
-
+// Types
 export type menuOptionsState = 'SettingsItems' | 'PlaybackRateItems'
 
 export default function Settings() {

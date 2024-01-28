@@ -4,15 +4,13 @@ import { useCallback, Dispatch, SetStateAction, useState } from 'react';
 // Insides
 import { useVideo } from '..';
 import SettingsItem from './settings-item';
+import { menuOptionsState } from '.';
 
 // Assets
 import SpeedIcon from '@mui/icons-material/Speed';
 import LoopIcon from '@mui/icons-material/Loop';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-
-// Types
-export type menuOptionsState = 'SettingsItems' | 'PlaybackRateItems'
 
 export default function SettingsItems({ setMenuOptions }: { setMenuOptions: Dispatch<SetStateAction<menuOptionsState>> }) {
 
