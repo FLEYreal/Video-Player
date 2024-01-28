@@ -1,5 +1,5 @@
 // Basics
-import { useCallback, Dispatch, SetStateAction } from 'react';
+import { useCallback, Dispatch, SetStateAction, useState } from 'react';
 
 // Insides
 import { useVideo } from '..';
@@ -19,10 +19,14 @@ export default function SettingsItems({ setMenuOptions }: { setMenuOptions: Disp
     // Context Values
     const { video, speed } = useVideo();
 
+    // Loop state to update visuals
+    const [loop, setLoop] = useState(video.loop)
+
     // Handlers
-    const handleLoopChange = useCallback(() => {
+    const handleLoopChange = () => {
         video.loop = !video.loop; // Apply changes to video
-    }, [video])
+        setLoop(!loop)
+    }
 
     const toSpeedOption = useCallback(() => {
         setMenuOptions('PlaybackRateItems') // Move to playback rate options
@@ -41,7 +45,7 @@ export default function SettingsItems({ setMenuOptions }: { setMenuOptions: Disp
             <SettingsItem
                 icon={<LoopIcon />}
                 label='Loop'
-                option={video.loop ? <CheckIcon /> : <CloseIcon />}
+                option={loop ? <CheckIcon /> : <CloseIcon />}
                 onClick={handleLoopChange}
             />
 
