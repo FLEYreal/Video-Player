@@ -104,7 +104,7 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
     const [fullScreen, setFullScreen] = useState(false);
     const [miniMode, setMiniMode] = useState(false);
     const [hidden, setHidden] = useState(false);
-    const [speed, setSpeed] = useState(localStorage.getItem('speed') ? Number(localStorage.getItem('speed')) : video.playbackRate);
+    const [speed, setSpeed] = useState(localStorage.getItem('speed') ? Number(localStorage.getItem('speed')) : video.playbackRate * 50);
     const [volume, setVolume] = useState(localStorage.getItem('volume') ? Number(localStorage.getItem('volume')) : 30);
     const [videoLength, setVideoLength] = useState({ now: '0:00', total: '3:50' });
 
@@ -162,11 +162,13 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
 
         if (video) {
 
+            // Apply all listeners
             video.addEventListener('enterpictureinpicture', handleMiniModeEnter);
             video.addEventListener('leavepictureinpicture', handleMiniModeLeave);
             video.addEventListener('timeupdate', defineCurrentTime)
             document.addEventListener("fullscreenchange", handleFullscreenChange);
 
+            // Remove listeners on unmount
             return () => {
                 video.removeEventListener('enterpictureinpicture', handleMiniModeEnter);
                 video.removeEventListener('leavepictureinpicture', handleMiniModeLeave);
@@ -178,17 +180,21 @@ export default function VideoPlayer({ src }: VideoPlayerContainerProps) {
 
     }, [video])
 
-    useEffect(() => {
+    useEffect(() => { // Save volume to be able to save it between reloads
+
         if (volume && typeof volume === "number") {
             localStorage.setItem('volume', String(volume));
         }
+
     }, [volume])
 
-    useEffect(() => {
+    useEffect(() => { // Save speed to be able to save it between reloads and element's unmounts
+
         if (speed && video) {
             localStorage.setItem('speed', String(speed)); // Save value for playback speed
             video.playbackRate = speed / 50; // Apply speed to video
         }
+
     }, [speed, video])
 
     return (

@@ -11,7 +11,7 @@ import { useVideo } from '..';
 
 import VolumeControls from './volume-controls';
 import Play from './play';
-import Settings from './settings';
+import Settings from '../settings';
 import VideoLength from './video-length'
 import MiniMode from './mini-mode';
 import FullScreen from './fullscreen';
