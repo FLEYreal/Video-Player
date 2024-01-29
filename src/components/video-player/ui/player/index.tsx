@@ -16,7 +16,7 @@ export const Video = styled.video`
 `
 
 // Video Player
-function VideoPlayerContainer({ src }: VideoPlayerContainerProps) {
+function VideoPlayerContainer({ src, sx }: VideoPlayerContainerProps) {
 
     // Hooks
     const videoEl = useRef<HTMLVideoElement>(null);
@@ -51,7 +51,7 @@ function VideoPlayerContainer({ src }: VideoPlayerContainerProps) {
     }, [fullScreen])
 
     return (
-        <Wrapper fullscreen={delayedFS}>
+        <Wrapper fullscreen={delayedFS} sx={sx}>
 
             <Notify notify={notify} />
             <ControlsContainer />

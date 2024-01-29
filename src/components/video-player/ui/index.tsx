@@ -12,6 +12,9 @@ import {
     MutableRefObject
 } from 'react';
 
+// UI-libs
+import { SxProps } from '@mui/material';
+
 // Insides
 import { fullScreenDelay, controlsDelay } from '../config'
 import VideoPlayerContainer from './player';
@@ -31,6 +34,7 @@ export type notifyProps = {
 
 export interface VideoPlayerContainerProps {
     src: string;
+    sx?: SxProps;
     keyHandler?: (event: KeyboardEvent) => void
 };
 
@@ -105,7 +109,7 @@ export const VideoPlayerContext = createContext<VideoPlayerContextProps>({
 export const useVideo = () => useContext(VideoPlayerContext);
 
 // Provider
-export default function VideoPlayer({ src, keyHandler: customKeyHandler }: VideoPlayerContainerProps) {
+export default function VideoPlayer({ src, sx, keyHandler: customKeyHandler }: VideoPlayerContainerProps) {
 
     // States
     const [video, setVideo] = useState(document.createElement('video'));
@@ -396,7 +400,7 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
                 }
             }}
         >
-            <VideoPlayerContainer src={src} />
+            <VideoPlayerContainer src={src} sx={sx} />
         </VideoPlayerContext.Provider>
     );
 

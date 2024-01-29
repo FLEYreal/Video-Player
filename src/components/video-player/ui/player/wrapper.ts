@@ -22,6 +22,8 @@ export const Wrapper = styled(({ fullscreen, ...props }: WrapperProps) => e(Box,
     justify-content: center;
     background-color: #000000;
 
+    ${props => props.fullscreen ? 'top: 0;' : ''}
+    ${props => props.fullscreen ? 'left: 0;' : ''}
     position: ${props => props.fullscreen ? 'absolute' : 'relative'};
     z-index: ${props => props.fullscreen ? '1000' : '0'};
     border-radius: ${props => props.fullscreen ? '0px' : '6px'};;
