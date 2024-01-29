@@ -20,7 +20,8 @@ function VideoPlayerContainer({ src }: VideoPlayerContainerProps) {
 
     // Hooks
     const videoEl = useRef<HTMLVideoElement>(null);
-    const { setPlaying, setVideo, fullScreen, setVideoLength, notify } = useVideo();
+    const { setPlaying, setVideo, fullScreen, setVideoLength, notify, playing } = useVideo();
+    const { setTitle, setOn } = notify;
 
     // States
     const [delayedFS, setDelayedFS] = useState(fullScreen)
@@ -31,6 +32,12 @@ function VideoPlayerContainer({ src }: VideoPlayerContainerProps) {
             setVideoLength(prev => ({ ...prev, total: videoEl.current!.duration }))
             videoEl.current!.volume = Number(localStorage.getItem('volume') || '30') / 100;
         }
+    }
+
+    const handleVideoClick = () => {
+        setPlaying(prev => !prev)
+        setTitle(playing ? 'Pause' : 'Play')
+        setOn(true)
     }
 
     // Effects
@@ -50,7 +57,7 @@ function VideoPlayerContainer({ src }: VideoPlayerContainerProps) {
             <ControlsContainer />
             <Video
                 onLoadedMetadata={handleLoadedMetadata}
-                onClick={() => setPlaying(prev => !prev)}
+                onClick={handleVideoClick}
                 ref={videoEl}
                 src={src}
                 style={{ zIndex: 0 }}

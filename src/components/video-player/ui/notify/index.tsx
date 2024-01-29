@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react';
 
 // UI-libs
 import { Box, Paper, Typography } from "@mui/material";
+
+// Insides
+import { notifyDuration } from '../../config'
 import { notifyProps } from '..';
 
 // Interfaces
@@ -23,7 +26,7 @@ export default function Notify({ notify }: NotifyProps) {
                     setOn(false);
                     setTimeoutId(null);
                 }
-            }, 500)
+            }, notifyDuration)
             setTimeoutId(timeoutId);
         }
     }, [on, title])

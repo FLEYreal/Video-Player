@@ -4,3 +4,4 @@ export const controlsDelay = 0.4 // Delay until controls is able to switch state
 export const buttonColor = '#dddddd' // Color of item in player
 export const buttonHighlightColor = '#ffffff' // Color of hovered item
 export const fullScreenDelay = 150; // Delay until fullscreen is able to switch state in milleseconds
+export const notifyDuration = 500; // Amount of time notification is shown in milleseconds (Notification that's shown in middle top of the player)

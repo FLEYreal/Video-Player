@@ -14,11 +14,14 @@ import PauseRoundedIcon from '@mui/icons-material/PauseRounded';
 export default function Play() {
 
     // Context Values
-    const { playing, setPlaying } = useVideo();
+    const { playing, setPlaying, notify } = useVideo();
+    const { setTitle, setOn } = notify;
 
     // Handlers
     const togglePlaying = useCallback(() => {
         setPlaying(prev => !prev);
+        setTitle(playing ? 'Pause' : 'Play')
+        setOn(true)
     }, [playing]);
 
     return (

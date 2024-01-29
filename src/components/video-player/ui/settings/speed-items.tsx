@@ -14,11 +14,18 @@ import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 export default function PlaybackRateItems({ setMenuOptions }: { setMenuOptions: Dispatch<SetStateAction<menuOptionsState>> }) {
 
     // Context Values
-    const { speed, setSpeed } = useVideo();
+    const { speed, setSpeed, notify } = useVideo();
+    const { setTitle, setOn } = notify;
 
     // Handlers
     const handleVolumeChange = (_: Event, newValue: number | number[]) => {
         setSpeed(newValue as number);
+    }
+
+    const resetSpeed = () => {
+        setSpeed(50)
+        setTitle('Reset to 1x')
+        setOn(true)
     }
 
     return (
@@ -56,7 +63,7 @@ export default function PlaybackRateItems({ setMenuOptions }: { setMenuOptions: 
                 <Slider value={speed} onChange={handleVolumeChange} size="medium" sx={{ width: '70%' }} />
 
                 {/* Shows current speed & Resets speed to 1 on click */}
-                <Button title="Reset" onClick={() => setSpeed(50)} sx={{ fontSize: '16px', p: '0' }}>{speed / 50}x</Button>
+                <Button title="Reset" onClick={resetSpeed} sx={{ fontSize: '16px', p: '0' }}>{speed / 50}x</Button>
 
             </Stack>
         </>

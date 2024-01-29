@@ -15,7 +15,8 @@ import CloseIcon from '@mui/icons-material/Close';
 export default function SettingsItems({ setMenuOptions }: { setMenuOptions: Dispatch<SetStateAction<menuOptionsState>> }) {
 
     // Context Values
-    const { video, speed } = useVideo();
+    const { video, speed, notify } = useVideo();
+    const { setTitle, setOn } = notify;
 
     // Loop state to update visuals
     const [loop, setLoop] = useState(video.loop)
@@ -24,6 +25,8 @@ export default function SettingsItems({ setMenuOptions }: { setMenuOptions: Disp
     const handleLoopChange = () => {
         video.loop = !video.loop; // Apply changes to video
         setLoop(!loop)
+        setTitle(`Loop is ${!loop ? 'ON' : 'OFF'}`)
+        setOn(true)
     }
 
     const toSpeedOption = useCallback(() => {

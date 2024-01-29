@@ -1,8 +1,8 @@
 // Basics
-import { useCallback } from 'react';
+import { useCallback, useState, useRef } from 'react';
 
 // UI-libs
-import { Box, Slider } from '@mui/material';
+import { Box, Popover, Slider, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 
 // Insides
@@ -30,6 +30,7 @@ export const VolumeSliderContainer = styled(Box)`
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    position: relative;
 `
 
 export const Wrapper = styled(Box)`
@@ -54,9 +55,16 @@ export const Wrapper = styled(Box)`
 
 export default function VolumeControls() {
 
+    // States
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+    // Refs
+    const popoverAnchor = useRef<HTMLElement | null>(null);
+
     // Context Values
     const { volume, setVolume } = useVideo();
 
+    // Handlers
     const handleVolumeChange = (_: Event, newValue: number | number[]) => {
         setVolume(newValue as number);
     }
@@ -66,13 +74,21 @@ export default function VolumeControls() {
         else setVolume(0)
     }, [setVolume, volume])
 
+    const openPopover = () => {
+        setAnchorEl(popoverAnchor.current)
+    }
+
+    const closePopover = () => {
+        setAnchorEl(null)
+    }
+
     return (
         <Wrapper>
-            <VideoButton 
-            title="Volume Controls (↑, ↓)" 
-            onClick={toggleVolume} 
-            sx={{ pr: '16px' }}
-        >
+            <VideoButton
+                title="Volume Controls (↑, ↓)"
+                onClick={toggleVolume}
+                sx={{ pr: '16px' }}
+            >
                 {
                     volume === 0 ?
                         <VolumeOffRoundedIcon
@@ -93,7 +109,40 @@ export default function VolumeControls() {
                 }
             </VideoButton>
 
-            <VolumeSliderContainer>
+            <Popover
+                sx={{
+                    userSelect: 'none',
+                    pointerEvents: 'none',
+                    opacity: 0.5,
+
+                    '& .MuiPopover-paper': {
+                        padding: '4px 12px'
+                    }
+                }}
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+                transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+            >
+                <Typography>
+                    {volume}%
+                </Typography>
+            </Popover>
+            <VolumeSliderContainer onMouseEnter={openPopover} onMouseLeave={closePopover}>
+                <Box
+                    ref={popoverAnchor}
+                    sx={{
+                        width: '70px',
+                        position: 'absolute',
+                        top: '-10px',
+                        left: '0px'
+                    }}></Box>
                 <VolumeSlider size="medium" value={volume} onChange={handleVolumeChange} />
             </VolumeSliderContainer>
 
