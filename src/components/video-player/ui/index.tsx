@@ -247,6 +247,7 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
 
     const handleMiniModeLeave = () => {
         setMiniMode(false);
+        setPlaying(false)
     }
 
     const handleFullscreenChange = () => {

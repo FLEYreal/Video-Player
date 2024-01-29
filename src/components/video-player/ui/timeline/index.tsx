@@ -84,6 +84,7 @@ export const TimelineSlider = styled(({ hidden, ...props }: TimelineSliderProps)
         height: 24px;
     };
 
+    pointer-events: ${({ hidden }) => hidden ? 'none' : 'fill'};
     opacity: ${({ hidden }) => hidden ? 0 : 1};
 `
 
@@ -140,7 +141,7 @@ export default function Timeline() {
             }
 
 
-            if (mouseX >= 0 && mouseX <= boundsWidth) {
+            if (mouseX >= 0 && mouseX <= boundsWidth && !hidden) {
 
                 // Setup hint's location relatively mouse, horizontally in the center
                 setHintX(mouseX - (hintRef.current!.clientWidth / 2));
@@ -179,7 +180,7 @@ export default function Timeline() {
 
         }
 
-    }, [wrapperRef.current, bounds, videoLength])
+    }, [wrapperRef.current, bounds, videoLength, hidden])
 
     useEffect(() => {
         if (wrapperRef.current) setBounds(wrapperRef.current!.getBoundingClientRect())
@@ -187,9 +188,9 @@ export default function Timeline() {
 
     return (
         <Wrapper ref={wrapperRef}>
-            <Hint hintX={hintX} ref={hintRef}>
+            {!hidden && <Hint hintX={hintX} ref={hintRef}>
                 <Typography>{formatTime(hintTime)}</Typography>
-            </Hint>
+            </Hint>}
             <TimelineSlider onChange={handleTimelineChange} hidden={hidden} value={value} />
         </Wrapper>
     )
