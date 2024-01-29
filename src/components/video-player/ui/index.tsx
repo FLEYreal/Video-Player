@@ -129,7 +129,7 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
     const totalVideoLength = useMemo(() => video.duration, [video.duration]);
 
     // Handlers
-    const keyHandler = (event: KeyboardEvent) => {
+    const keyupHandler = (event: KeyboardEvent) => {
 
         // Custom key handler if there is
         if (customKeyHandler) customKeyHandler(event)
@@ -232,6 +232,52 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
 
     }
 
+    const keydownHandler = (event: KeyboardEvent) => {
+
+        console.log('event', event.repeat)
+
+        if (!event.repeat) return
+
+        if (event.code === 'ArrowUp') {
+            setVolume(prev => {
+                if (prev + 5 > 100) {
+
+                    return 100;
+                }
+                setOn(true)
+                setTitle(`${prev + 5}%`)
+                return prev + 5;
+            })
+        }
+
+        if (event.code === 'ArrowDown') {
+            setVolume(prev => {
+                if (prev - 5 < 0) {
+                    return 0;
+                }
+                setOn(true)
+                setTitle(`${prev - 5}%`)
+                return prev - 5;
+            })
+        }
+
+        // Move video +5 Seconds
+        else if (event.code === 'ArrowRight') {
+            video.currentTime = video.currentTime + 5;
+            setVideoLength(prev => ({ ...prev, now: prev.now + 5 }))
+            setTitle('+5 Seconds')
+            setOn(true)
+        }
+
+        // Move video -5 Seconds
+        else if (event.code === 'ArrowLeft') {
+            video.currentTime = video.currentTime - 5;
+            setVideoLength(prev => ({ ...prev, now: prev.now - 5 }))
+            setTitle('-5 Seconds')
+            setOn(true)
+        }
+    }
+
     const defineCurrentTime = () => {
 
         // Set time
@@ -285,7 +331,8 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
             video.addEventListener('leavepictureinpicture', handleMiniModeLeave);
             video.addEventListener('timeupdate', defineCurrentTime)
             document.addEventListener("fullscreenchange", handleFullscreenChange);
-            document.addEventListener('keyup', keyHandler)
+            document.addEventListener('keyup', keyupHandler)
+            document.addEventListener('keydown', keydownHandler)
 
             // Remove listeners on unmount
             return () => {
@@ -293,7 +340,8 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
                 video.removeEventListener('leavepictureinpicture', handleMiniModeLeave);
                 video.removeEventListener('timeupdate', defineCurrentTime)
                 document.removeEventListener("fullscreenchange", handleFullscreenChange);
-                document.removeEventListener('keyup', keyHandler)
+                document.removeEventListener('keyup', keyupHandler)
+                document.removeEventListener('keydown', keydownHandler)
             }
 
         }
