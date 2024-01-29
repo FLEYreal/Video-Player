@@ -8,6 +8,7 @@ import styled from "@emotion/styled"
 // Insides
 import { controlsFadeTime } from '../../config'
 import { useVideo } from "..";
+import { formatTime } from '../../utils/format-time';
 
 // Interfaces
 export interface TimelineSliderProps extends SliderProps {
@@ -17,6 +18,9 @@ export interface TimelineSliderProps extends SliderProps {
 export interface HintProps extends PaperProps {
     hintX: number;
 }
+
+// Variables
+const timelinePaddings = 22 // Defined separately as it's important in timeline calculations
 
 // Styled
 export const Hint = styled(
@@ -43,7 +47,7 @@ export const Wrapper = styled(Box)`
     left: 0;
     width: 100%;
     height: 50px;
-    padding: 1rem;
+    padding: ${timelinePaddings}px;
     box-sizing: border-box;
     pointer-events: fill;
     z-index: 2;
@@ -98,6 +102,9 @@ export default function Timeline() {
     // Horizontal hint's location
     const [hintX, setHintX] = useState(0)
 
+    // Time to be displayed in hint
+    const [hintTime, setHintTime] = useState(0)
+
     // Bounds state contains dynamic boundaries of the wrapper where hint can move after mouse horizontally
     const [bounds, setBounds] = useState(wrapperRef.current ? wrapperRef.current!.getBoundingClientRect() : null)
 
@@ -115,10 +122,25 @@ export default function Timeline() {
     const mouseMoveHandler = (event: MouseEvent) => {
         if (bounds) { // Boundaries have to be defined
 
+            const { total } = videoLength; // Total video's length
+
             // Mouse location
             const mouseX = event.clientX - bounds.left;
+            const boundsWidth = (Math.floor(bounds.width * 10) / 10) - timelinePaddings;
 
-            if (mouseX >= 0 && mouseX <= bounds.width) {
+            // Calculate percentage of the mouse location
+            const percent = Math.floor((((mouseX - (timelinePaddings / 2)) / (boundsWidth - (timelinePaddings / 2))) * 100));
+
+            // Set hint if it's within 100 percents
+            if (percent >= 0 && percent <= 100) {
+
+                // Set hint's time
+                setHintTime((total / 100) * percent)
+
+            }
+
+
+            if (mouseX >= 0 && mouseX <= boundsWidth) {
 
                 // Setup hint's location relatively mouse, horizontally in the center
                 setHintX(mouseX - (hintRef.current!.clientWidth / 2));
@@ -157,7 +179,7 @@ export default function Timeline() {
 
         }
 
-    }, [wrapperRef.current, bounds])
+    }, [wrapperRef.current, bounds, videoLength])
 
     useEffect(() => {
         if (wrapperRef.current) setBounds(wrapperRef.current!.getBoundingClientRect())
@@ -166,7 +188,7 @@ export default function Timeline() {
     return (
         <Wrapper ref={wrapperRef}>
             <Hint hintX={hintX} ref={hintRef}>
-                <Typography>3:50</Typography>
+                <Typography>{formatTime(hintTime)}</Typography>
             </Hint>
             <TimelineSlider onChange={handleTimelineChange} hidden={hidden} value={value} />
         </Wrapper>

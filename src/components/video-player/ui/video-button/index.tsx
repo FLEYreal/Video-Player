@@ -58,6 +58,7 @@ function VideoButton({ title, children, onClick, ...props }: VideoButtonProps) {
                         sx={{
                             pointerEvents: 'none',
                             '& .MuiPopover-paper': {
+                                marginTop: '-22px',
                                 padding: '4px 12px'
                             }
                         }}

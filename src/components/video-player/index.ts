@@ -64,7 +64,6 @@ export {
     miniButtonStyles
 } from './ui/controls/styles';
 export {
-    formatTime,
     default as VideoLength
 } from './ui/controls/video-length';
 export {
