@@ -19,14 +19,15 @@ export default function FullScreen() {
     // Handlers
     const toggleFullScreen = useCallback(() => {
         if (
-            !fullScreen && 
-            FSDelay !== null && 
-            FSDelay !== undefined && 
-            !FSDelay.current
+            FSDelay !== null && // Item has to be defined
+            FSDelay !== undefined &&
+            !FSDelay.current // Not delayed
         ) {
-            setFullScreen(prev => !prev)
-            FSDelay.current = true;
-            setTimeout(() => {
+
+            setFullScreen(prev => !prev) // Change state
+            FSDelay.current = true; // Set delay to true
+
+            setTimeout(() => { // Start delay period and set delay state to false once it's done
                 FSDelay.current = false;
             }, fullScreenDelay)
         }

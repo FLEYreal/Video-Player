@@ -16,7 +16,7 @@ export interface TimelineSliderProps extends SliderProps {
 // Styled
 export const Wrapper = styled(Box)`
     position: absolute;
-    bottom: 38px;
+    bottom: 42px;
     left: 0;
     width: 100%;
     height: 50px;
