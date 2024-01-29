@@ -1,6 +1,8 @@
 # Video-Player
 Made with ReactJS and Material-UI.
 
+<img src="./public/showcase.png" alt="Showcase Image"/>
+
 ### Features
 - Play / Pause
 - Volume
