@@ -1,4 +1,4 @@
-// Imports
+// Basics
 import {
     useState,
     useContext,
@@ -7,8 +7,13 @@ import {
     SetStateAction,
     useEffect,
     useMemo,
-    useLayoutEffect
+    useLayoutEffect,
+    useRef,
+    MutableRefObject
 } from 'react';
+
+// Insides
+import { fullScreenDelay } from '../config'
 import VideoPlayerContainer from './player';
 
 // Interfaces & Types
@@ -46,6 +51,8 @@ export interface VideoPlayerContextProps {
 
     videoLength: videoLength;
     setVideoLength: Dispatch<SetStateAction<videoLength>>;
+
+    FSDelay?: MutableRefObject<boolean | null>;
 }
 
 // Functions
@@ -94,6 +101,9 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
     const [volume, setVolume] = useState(localStorage.getItem('volume') ? Number(localStorage.getItem('volume')) : 30);
     const [videoLength, setVideoLength] = useState({ now: 0, total: 600 });
 
+    // Refs
+    const FSDelay = useRef<boolean | null>(null);
+
     // Define video length
     const totalVideoLength = useMemo(() => video.duration, [video.duration]);
 
@@ -139,7 +149,15 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
 
         // Toggle Fullscreen
         else if (event.code === 'KeyF') {
-            setFullScreen(prev =>!prev);
+            if (!FSDelay.current) {
+
+                console.log('fullscreen', FSDelay.current);
+
+                setFullScreen(prev => !prev);
+                FSDelay.current = true;
+
+                setTimeout(() => { FSDelay.current = false }, fullScreenDelay * 2);
+            }
         }
 
     }
@@ -152,15 +170,6 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
             now: video.currentTime
         }));
 
-    }
-
-    const handleFullscreenChange = () => {
-        if (document.fullscreenElement) {
-            setFullScreen(true);
-            setMiniMode(false);
-        }
-
-        else setFullScreen(false);
     }
 
     const handleMiniModeEnter = () => {
@@ -196,7 +205,6 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
             video.addEventListener('leavepictureinpicture', handleMiniModeLeave);
             video.addEventListener('timeupdate', defineCurrentTime)
             document.addEventListener('keyup', keyHandler)
-            document.addEventListener("fullscreenchange", handleFullscreenChange);
 
             // Remove listeners on unmount
             return () => {
@@ -204,7 +212,6 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
                 video.removeEventListener('leavepictureinpicture', handleMiniModeLeave);
                 video.removeEventListener('timeupdate', defineCurrentTime)
                 document.removeEventListener('keyup', keyHandler)
-                document.removeEventListener("fullscreenchange", handleFullscreenChange);
             }
 
         }
@@ -229,6 +236,13 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
 
     }, [speed, video])
 
+    useEffect(() => {
+
+        if (fullScreen) document.documentElement.requestFullscreen()
+        else if (!fullScreen && document.fullscreenElement) document.exitFullscreen()
+
+    }, [fullScreen])
+
     return (
         <VideoPlayerContext.Provider
 
@@ -241,7 +255,8 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
                 hidden, setHidden,
                 speed, setSpeed,
                 volume, setVolume,
-                videoLength, setVideoLength
+                videoLength, setVideoLength,
+                FSDelay
             }}
         >
             <VideoPlayerContainer src={src} />

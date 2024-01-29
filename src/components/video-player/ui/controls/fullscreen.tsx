@@ -2,6 +2,7 @@
 import { useCallback } from 'react';
 
 // Insides
+import { fullScreenDelay } from '../../config'
 import { miniButtonStyles } from './styles';
 import { useVideo } from '..';
 import VideoButton from '../video-button';
@@ -13,14 +14,22 @@ import FullscreenExitRoundedIcon from '@mui/icons-material/FullscreenExitRounded
 export default function FullScreen() {
 
     // Context Values
-    const { fullScreen, setFullScreen, setMiniMode } = useVideo();
+    const { fullScreen, setFullScreen, setMiniMode, FSDelay } = useVideo();
 
     // Handlers
     const toggleFullScreen = useCallback(() => {
-
-        if (fullScreen) document.exitFullscreen(); // Exit if it's full screen
-        else document.documentElement.requestFullscreen(); // Enter if it's not full screen
-
+        if (
+            !fullScreen && 
+            FSDelay !== null && 
+            FSDelay !== undefined && 
+            !FSDelay.current
+        ) {
+            setFullScreen(prev => !prev)
+            FSDelay.current = true;
+            setTimeout(() => {
+                FSDelay.current = false;
+            }, fullScreenDelay)
+        }
     }, [fullScreen, setFullScreen, setMiniMode]);
 
     return (

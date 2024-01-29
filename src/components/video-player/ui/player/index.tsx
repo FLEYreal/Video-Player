@@ -1,5 +1,5 @@
 // Bascis
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // UI-Libs
 import styled from '@emotion/styled';
@@ -8,6 +8,7 @@ import styled from '@emotion/styled';
 import ControlsContainer from "../controls-container";
 import { useVideo, VideoPlayerContainerProps } from "..";
 import { Wrapper } from './wrapper';
+import { fullScreenDelay } from "../../config";
 
 export const Video = styled.video`
     width: 100%;
@@ -20,6 +21,9 @@ function VideoPlayerContainer({ src }: VideoPlayerContainerProps) {
     const videoEl = useRef<HTMLVideoElement>(null);
     const { setPlaying, setVideo, fullScreen, setVideoLength } = useVideo();
 
+    // States
+    const [delayedFS, setDelayedFS] = useState(fullScreen)
+
     // Handlers
     const handleLoadedMetadata = () => {
         if (videoEl.current) {
@@ -30,9 +34,16 @@ function VideoPlayerContainer({ src }: VideoPlayerContainerProps) {
 
     // Effects
     useEffect(() => setVideo(videoEl.current as HTMLVideoElement), []); // Set video component globally
+    useEffect(() => { // Delay Fullscreen styles applying due to built-in fullscreen animation
+
+        setTimeout(() => {
+            setDelayedFS(fullScreen)
+        }, fullScreenDelay)
+
+    }, [fullScreen])
 
     return (
-        <Wrapper fullscreen={fullScreen}>
+        <Wrapper fullscreen={delayedFS}>
 
             <ControlsContainer />
             <Video

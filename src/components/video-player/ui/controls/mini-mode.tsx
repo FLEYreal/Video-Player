@@ -26,7 +26,7 @@ export default function MiniMode() {
             setFullScreen(false); // It can't be fullscreen with mini mode true
 
             if (!miniMode) {
-                if (fullScreen) document.exitFullscreen(); // Exit if it's mini mode
+                if (fullScreen) setFullScreen(prev => !prev) // Exit if it's mini mode
                 video.requestPictureInPicture()
             }
 
