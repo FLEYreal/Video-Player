@@ -40,6 +40,7 @@ export default function Notify({ notify }: NotifyProps) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            pointerEvents: 'none'
         }}>
             <Paper
                 sx={{
