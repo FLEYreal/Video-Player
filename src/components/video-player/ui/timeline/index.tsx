@@ -72,6 +72,7 @@ export default function Timeline() {
 
         video.currentTime = (newValue as number) * (total / 100);
         setValue(newValue as number);
+
     };
 
     // Effects

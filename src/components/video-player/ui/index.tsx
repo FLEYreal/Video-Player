@@ -131,10 +131,11 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
     // Handlers
     const keyHandler = (event: KeyboardEvent) => {
 
+        // Custom key handler if there is
         if (customKeyHandler) customKeyHandler(event)
 
         // Play & Pause video on Space
-        if (event.code === 'Space') {
+        if (event.key === ' ') {
             setPlaying(prev => !prev);
         }
 
@@ -163,8 +164,24 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
             })
         }
 
+        // Move video +5 Seconds
+        else if (event.code === 'ArrowRight') {
+            video.currentTime = video.currentTime + 5;
+            setVideoLength(prev => ({ ...prev, now: prev.now + 5 }))
+            setTitle('+5 Seconds')
+            setOn(true)
+        }
+
+        // Move video -5 Seconds
+        else if (event.code === 'ArrowLeft') {
+            video.currentTime = video.currentTime - 5;
+            setVideoLength(prev => ({ ...prev, now: prev.now - 5 }))
+            setTitle('-5 Seconds')
+            setOn(true)
+        }
+
         // Hide Menu
-        else if (event.code === 'KeyS') {
+        else if (event.key === 's' || event.key === 'ы') {
             if (
                 hideDelay !== null && // Item has to be defined
                 hideDelay !== undefined &&
@@ -182,7 +199,7 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
         }
 
         // Hide Menu
-        else if (event.code === 'KeyW') {
+        else if (event.key === 'w' || event.key === 'ц') {
             if (
                 hideDelay !== null && // Item has to be defined
                 hideDelay !== undefined &&
@@ -200,7 +217,7 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
         }
 
         // Toggle Fullscreen
-        else if (event.code === 'KeyF') {
+        else if (event.key === 'f' || event.key === 'а') {
             if (!FSDelay.current) {
 
                 setFullScreen(prev => !prev) // Change state
