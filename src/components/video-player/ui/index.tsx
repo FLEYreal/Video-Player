@@ -137,6 +137,8 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
         // Play & Pause video on Space
         if (event.key === ' ') {
             setPlaying(prev => !prev);
+            setTitle(playing ? 'Pause' : 'Play');
+            setOn(true)
         }
 
         // Increase Volume on Arrow Up
@@ -296,7 +298,7 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
 
         }
 
-    }, [video])
+    }, [video, playing])
 
     useEffect(() => { // Save volume to be able to save it between reloads
 

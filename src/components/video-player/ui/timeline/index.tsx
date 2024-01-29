@@ -20,7 +20,7 @@ export interface HintProps extends PaperProps {
 }
 
 // Variables
-const timelinePaddings = 22 // Defined separately as it's important in timeline calculations
+export const timelinePaddings = 22 // Defined separately as it's important in timeline calculations
 
 // Styled
 export const Hint = styled(

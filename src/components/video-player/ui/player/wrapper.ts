@@ -19,12 +19,15 @@ export const Wrapper = styled(({ fullscreen, ...props }: WrapperProps) => e(Box,
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    justify-content: center;
+    background-color: #000000;
 
     position: ${props => props.fullscreen ? 'absolute' : 'relative'};
     z-index: ${props => props.fullscreen ? '1000' : '0'};
     border-radius: ${props => props.fullscreen ? '0px' : '6px'};;
     width: ${props => props.fullscreen ? '100%' : '90%'};
-    max-width: ${props => props.fullscreen ? '100%' : '1200px'};;
+    max-width: ${props => props.fullscreen ? '100%' : '1200px'};
+    height: ${props => props.fullscreen ? '100vh' : 'auto'};
 
     &:hover > ${ControlsWrapper} {
         opacity: 1;

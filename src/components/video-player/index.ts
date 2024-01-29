@@ -1,12 +1,23 @@
 // Main Component
 export { default as VideoPlayer } from './ui';
 
+// Utils
+export {
+    formatTime
+} from './utils/format-time';
+
 // Player
 export { default as VideoPlayerContainer, Video } from './ui/player';
 export { 
     type WrapperProps as VideoPlayerContainerWrapperProps,
     Wrapper as VideoPlayerContainerWrapper
 } from './ui/player/wrapper';
+
+// Notify
+export {
+    type NotifyProps,
+    default as Notify
+} from './ui/notify'
 
 // Controls Container
 export {
@@ -28,8 +39,11 @@ export {
 // Tineline
 export {
     type TimelineSliderProps,
+    type HintProps,
+    Hint,
     Wrapper as TimelineWrapper,
     TimelineSlider,
+    timelinePaddings,
     default as Timeline
 } from './ui/timeline';
 
