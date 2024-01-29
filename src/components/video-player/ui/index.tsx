@@ -20,7 +20,14 @@ import VideoPlayerContainer from './player';
 export type videoLength = {
     now: number,
     total: number
-}
+};
+
+export type notifyProps = {
+    on: boolean,
+    setOn: Dispatch<SetStateAction<boolean>>,
+    title: string,
+    setTitle: Dispatch<SetStateAction<string>>
+};
 
 export interface VideoPlayerContainerProps {
     src: string;
@@ -54,6 +61,7 @@ export interface VideoPlayerContextProps {
 
     FSDelay?: MutableRefObject<boolean | null>;
     hideDelay?: MutableRefObject<boolean | null>;
+    notify: notifyProps;
 }
 
 // Functions
@@ -83,7 +91,14 @@ export const VideoPlayerContext = createContext<VideoPlayerContextProps>({
     setSpeed: () => { },
 
     videoLength: { now: 0, total: 600 },
-    setVideoLength: () => { }
+    setVideoLength: () => { },
+
+    notify: {
+        on: false,
+        setOn: () => { },
+        title: '',
+        setTitle: () => { }
+    }
 });
 
 // Hook
@@ -101,6 +116,9 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
     const [speed, setSpeed] = useState(localStorage.getItem('speed') ? Number(localStorage.getItem('speed')) : video.playbackRate * 50);
     const [volume, setVolume] = useState(localStorage.getItem('volume') ? Number(localStorage.getItem('volume')) : 30);
     const [videoLength, setVideoLength] = useState({ now: 0, total: 600 });
+    const [on, setOn] = useState(false);
+    const [title, setTitle] = useState('');
+
 
     // Refs
     const FSDelay = useRef<boolean | null>(null); // Delay to activate fullscreen
@@ -124,8 +142,11 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
         else if (event.code === 'ArrowUp') {
             setVolume(prev => {
                 if (prev + 5 > 100) {
+
                     return 100;
                 }
+                setOn(true)
+                setTitle(`${prev + 5}%`)
                 return prev + 5;
             })
         }
@@ -136,6 +157,8 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
                 if (prev - 5 < 0) {
                     return 0;
                 }
+                setOn(true)
+                setTitle(`${prev - 5}%`)
                 return prev - 5;
             })
         }
@@ -209,6 +232,15 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
         setMiniMode(false);
     }
 
+    const handleFullscreenChange = () => {
+        if (document.fullscreenElement) {
+            setFullScreen(true);
+            setMiniMode(false);
+        }
+
+        else setFullScreen(false);
+    }
+
     // Effects
     useEffect(() => {
         if (video) {
@@ -232,6 +264,7 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
             video.addEventListener('enterpictureinpicture', handleMiniModeEnter);
             video.addEventListener('leavepictureinpicture', handleMiniModeLeave);
             video.addEventListener('timeupdate', defineCurrentTime)
+            document.addEventListener("fullscreenchange", handleFullscreenChange);
             document.addEventListener('keyup', keyHandler)
 
             // Remove listeners on unmount
@@ -239,6 +272,7 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
                 video.removeEventListener('enterpictureinpicture', handleMiniModeEnter);
                 video.removeEventListener('leavepictureinpicture', handleMiniModeLeave);
                 video.removeEventListener('timeupdate', defineCurrentTime)
+                document.removeEventListener("fullscreenchange", handleFullscreenChange);
                 document.removeEventListener('keyup', keyHandler)
             }
 
@@ -266,7 +300,10 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
 
     useEffect(() => {
 
-        if (fullScreen) document.documentElement.requestFullscreen()
+        if (fullScreen) {
+            document.documentElement.requestFullscreen()
+            setMiniMode(false);
+        }
         else if (!fullScreen && document.fullscreenElement) document.exitFullscreen()
 
     }, [fullScreen])
@@ -284,7 +321,11 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
                 speed, setSpeed,
                 volume, setVolume,
                 videoLength, setVideoLength,
-                FSDelay, hideDelay
+                FSDelay, hideDelay,
+                notify: {
+                    on, setOn,
+                    title, setTitle
+                }
             }}
         >
             <VideoPlayerContainer src={src} />

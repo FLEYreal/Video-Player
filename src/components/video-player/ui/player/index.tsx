@@ -9,6 +9,7 @@ import ControlsContainer from "../controls-container";
 import { useVideo, VideoPlayerContainerProps } from "..";
 import { Wrapper } from './wrapper';
 import { fullScreenDelay } from "../../config";
+import Notify from "../notify";
 
 export const Video = styled.video`
     width: 100%;
@@ -19,7 +20,7 @@ function VideoPlayerContainer({ src }: VideoPlayerContainerProps) {
 
     // Hooks
     const videoEl = useRef<HTMLVideoElement>(null);
-    const { setPlaying, setVideo, fullScreen, setVideoLength } = useVideo();
+    const { setPlaying, setVideo, fullScreen, setVideoLength, notify } = useVideo();
 
     // States
     const [delayedFS, setDelayedFS] = useState(fullScreen)
@@ -45,6 +46,7 @@ function VideoPlayerContainer({ src }: VideoPlayerContainerProps) {
     return (
         <Wrapper fullscreen={delayedFS}>
 
+            <Notify notify={notify} />
             <ControlsContainer />
             <Video
                 onLoadedMetadata={handleLoadedMetadata}
