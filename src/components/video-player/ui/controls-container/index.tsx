@@ -1,10 +1,11 @@
 // Basics
-import { createElement as e, useCallback } from "react";
+import { MutableRefObject, createElement as e, useCallback, useRef, } from "react";
 
 // UI-libs
 import styled from '@emotion/styled';
 
 // Insides
+import { controlsDelay } from "../../config";
 import { useVideo } from "..";
 import { miniButtonStyles } from '../controls/styles'
 import { Wrapper } from "./wrapper";
@@ -41,12 +42,26 @@ export const ArrowButton = styled(({ hidden, ...props }: ArrowProps) => e(VideoB
 export default function ControlsContainer() {
 
     // Context Values
-    const { playing, hidden, setHidden } = useVideo()
+    const { playing, hidden, setHidden, hideDelay } = useVideo()
 
     // Handlers
-    const handleClick = useCallback(() => {
-        setHidden(!hidden)
-    }, [setHidden, hidden])
+    const handleClick = () => {
+
+        if (
+            hideDelay !== null && // Item has to be defined
+            hideDelay !== undefined &&
+            !hideDelay.current // Not delayed
+        ) {
+
+            setHidden(!hidden)
+            hideDelay.current = true;
+
+            setTimeout(() => {
+                hideDelay.current = false;
+            }, controlsDelay * 1000)
+
+        }
+    }
 
     return (
         <Wrapper playing={playing}>

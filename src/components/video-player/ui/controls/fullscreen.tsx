@@ -30,6 +30,7 @@ export default function FullScreen() {
             setTimeout(() => { // Start delay period and set delay state to false once it's done
                 FSDelay.current = false;
             }, fullScreenDelay)
+
         }
     }, [fullScreen, setFullScreen, setMiniMode]);
 

@@ -6,6 +6,7 @@ import { Box, Slider, SliderProps } from "@mui/material"
 import styled from "@emotion/styled"
 
 // Insides
+import { controlsFadeTime } from '../../config'
 import { useVideo } from "..";
 
 // Interfaces
@@ -30,7 +31,7 @@ export const Wrapper = styled(Box)`
 `
 
 export const TimelineSlider = styled(({ hidden, ...props }: TimelineSliderProps) => e(Slider, props)) <TimelineSliderProps>`
-    transition: all 0.05s ease-in-out;
+    transition: all ${controlsFadeTime - 0.1}s ease-in-out;
     height: 3px;
 
     & .MuiSlider-thumb {

@@ -13,7 +13,7 @@ import {
 } from 'react';
 
 // Insides
-import { fullScreenDelay } from '../config'
+import { fullScreenDelay, controlsDelay } from '../config'
 import VideoPlayerContainer from './player';
 
 // Interfaces & Types
@@ -53,6 +53,7 @@ export interface VideoPlayerContextProps {
     setVideoLength: Dispatch<SetStateAction<videoLength>>;
 
     FSDelay?: MutableRefObject<boolean | null>;
+    hideDelay?: MutableRefObject<boolean | null>;
 }
 
 // Functions
@@ -102,7 +103,9 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
     const [videoLength, setVideoLength] = useState({ now: 0, total: 600 });
 
     // Refs
-    const FSDelay = useRef<boolean | null>(null);
+    const FSDelay = useRef<boolean | null>(null); // Delay to activate fullscreen
+    const hideDelay: MutableRefObject<boolean | null> = useRef(null); // Delay to activate hidden mode
+
 
     // Define video length
     const totalVideoLength = useMemo(() => video.duration, [video.duration]);
@@ -139,24 +142,49 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
 
         // Hide Menu
         else if (event.code === 'KeyS') {
-            setHidden(true);
+            if (
+                hideDelay !== null && // Item has to be defined
+                hideDelay !== undefined &&
+                !hideDelay.current // Not delayed
+            ) {
+
+                setHidden(true)
+                hideDelay.current = true;
+
+                setTimeout(() => {
+                    hideDelay.current = false;
+                }, controlsDelay * 1000)
+
+            }
         }
 
         // Hide Menu
         else if (event.code === 'KeyW') {
-            setHidden(false);
+            if (
+                hideDelay !== null && // Item has to be defined
+                hideDelay !== undefined &&
+                !hideDelay.current // Not delayed
+            ) {
+
+                setHidden(false)
+                hideDelay.current = true;
+
+                setTimeout(() => {
+                    hideDelay.current = false;
+                }, controlsDelay * 1000)
+
+            }
         }
 
         // Toggle Fullscreen
         else if (event.code === 'KeyF') {
             if (!FSDelay.current) {
 
-                console.log('fullscreen', FSDelay.current);
+                setFullScreen(prev => !prev) // Change state
+                FSDelay.current = true; // Set delay to true
 
-                setFullScreen(prev => !prev);
-                FSDelay.current = true;
+                setTimeout(() => { FSDelay.current = false }, fullScreenDelay * 2); // Start delay period and set delay state to false once it's done
 
-                setTimeout(() => { FSDelay.current = false }, fullScreenDelay * 2);
             }
         }
 
@@ -256,7 +284,7 @@ export default function VideoPlayer({ src, keyHandler: customKeyHandler }: Video
                 speed, setSpeed,
                 volume, setVolume,
                 videoLength, setVideoLength,
-                FSDelay
+                FSDelay, hideDelay
             }}
         >
             <VideoPlayerContainer src={src} />
