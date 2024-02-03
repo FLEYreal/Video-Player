@@ -91,7 +91,7 @@ export const TimelineSlider = styled(({ hidden, ...props }: TimelineSliderProps)
 export default function Timeline() {
 
     // Context Values
-    const { hidden, videoLength, video } = useVideo();
+    const { hidden, videoLength, video, fullScreen } = useVideo();
 
     // References
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -126,8 +126,8 @@ export default function Timeline() {
             const { total } = videoLength; // Total video's length
 
             // Mouse location
-            const mouseX = event.clientX - bounds.left;
-            const boundsWidth = (Math.floor(bounds.width * 10) / 10) - timelinePaddings;
+            const mouseX = event.clientX - wrapperRef.current!.getBoundingClientRect().left;
+            const boundsWidth = (Math.floor(wrapperRef.current!.getBoundingClientRect().width * 10) / 10) - timelinePaddings;
 
             // Calculate percentage of the mouse location
             const percent = Math.floor((((mouseX - (timelinePaddings / 2)) / (boundsWidth - (timelinePaddings / 2))) * 100));
@@ -154,7 +154,7 @@ export default function Timeline() {
         setBounds(wrapperRef.current!.getBoundingClientRect());
     }
 
-    // Effects
+    // Effectsf
     useEffect(() => {
 
         const { now, total } = videoLength;
@@ -188,9 +188,12 @@ export default function Timeline() {
 
     return (
         <Wrapper ref={wrapperRef}>
-            {!hidden && <Hint hintX={hintX} ref={hintRef}>
-                <Typography>{formatTime(hintTime)}</Typography>
-            </Hint>}
+            {
+                !hidden &&
+                <Hint hintX={hintX} ref={hintRef}>
+                    <Typography>{formatTime(hintTime)}</Typography>
+                </Hint>
+            }
             <TimelineSlider onChange={handleTimelineChange} hidden={hidden} value={value} />
         </Wrapper>
     )
