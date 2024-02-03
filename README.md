@@ -1,7 +1,10 @@
-# Video-Player
-Made with ReactJS and Material-UI.
+# <a href="https://video-player-rust.vercel.app/">Video-Player</a>
+Video-Player made with ReactJS and Material-UI by FLEYreal!
 
+<a href="https://video-player-rust.vercel.app/">
+  See Showcase Website
 <img src="./public/showcase.png" alt="Showcase Image"/>
+</a>
 
 ### Features
 - Play / Pause
