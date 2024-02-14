@@ -238,7 +238,8 @@ export default function VideoPlayer({ src, sx, keyHandler: customKeyHandler }: V
 
     const keydownHandler = (event: KeyboardEvent) => {
 
-        console.log('event', event.repeat)
+        // Prevent from scrolling the page on space key
+        if(event.key === ' ') event.preventDefault()
 
         if (!event.repeat) return
 
